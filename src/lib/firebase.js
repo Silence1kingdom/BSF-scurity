@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, signOut, onAuthStateChanged } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDElvnpE8PghF2QydZzcwnBHLdcc3cWqUc',
@@ -15,14 +15,34 @@ const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 
 const googleProvider = new GoogleAuthProvider()
+googleProvider.setCustomParameters({ prompt: 'select_account' })
 
 export async function signInWithGoogle() {
+  const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   try {
+    if (isMobile) {
+      await signInWithRedirect(auth, googleProvider)
+      return null
+    }
     const result = await signInWithPopup(auth, googleProvider)
     return result.user
   } catch (err) {
+    if (err.code === 'auth/popup-blocked') {
+      await signInWithRedirect(auth, googleProvider)
+      return null
+    }
     console.error('Google sign-in error:', err)
     throw err
+  }
+}
+
+export async function handleRedirectResult() {
+  try {
+    const result = await getRedirectResult(auth)
+    return result?.user || null
+  } catch (err) {
+    console.error('Redirect sign-in error:', err)
+    return null
   }
 }
 
@@ -31,7 +51,6 @@ export async function signOutUser() {
     await signOut(auth)
   } catch (err) {
     console.error('Sign-out error:', err)
-    throw err
   }
 }
 

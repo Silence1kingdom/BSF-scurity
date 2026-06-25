@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { auth, signInWithGoogle, onAuthChange } from '../lib/firebase'
+import { auth, signInWithGoogle, handleRedirectResult, onAuthChange } from '../lib/firebase'
 import { useLang } from '../lib/i18n'
 
 export default function LoginPage() {
@@ -9,6 +9,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [checking, setChecking] = useState(true)
+
+  useEffect(() => {
+    handleRedirectResult().then(user => {
+      if (user) navigate('/profile', { replace: true })
+    })
+  }, [navigate])
 
   useEffect(() => {
     const unsub = onAuthChange(user => {
@@ -22,8 +28,8 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
     try {
-      await signInWithGoogle()
-      navigate('/profile', { replace: true })
+      const user = await signInWithGoogle()
+      if (user) navigate('/profile', { replace: true })
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
         setError(t('login_error'))
