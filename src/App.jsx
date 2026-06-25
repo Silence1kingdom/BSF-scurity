@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import ErrorBoundary from './lib/ErrorBoundary'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import BackToTop from './components/BackToTop'
@@ -17,7 +18,7 @@ import './App.css'
 
 export default function App() {
   return (
-    <>
+    <ErrorBoundary>
       <ProgressBar />
       <Navbar />
       <Routes>
@@ -34,6 +35,6 @@ export default function App() {
       <ChatBot />
       <BackToTop />
       <Footer />
-    </>
+    </ErrorBoundary>
   )
 }
