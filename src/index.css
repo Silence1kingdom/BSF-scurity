@@ -18,6 +18,7 @@
   --chatbot-bg: var(--bg-card);
   --input-bg: var(--bg);
   --card-shadow: none;
+  --navbar-bg: rgba(10,14,10,0.98);
 }
 
 [data-theme="light"] {
@@ -37,6 +38,7 @@
   --chatbot-bg: #fff;
   --input-bg: #f0f0f0;
   --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --navbar-bg: rgba(245,247,245,0.98);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
