@@ -58,7 +58,7 @@ export default function Navbar() {
           <Link to="/profile" onClick={() => setOpen(false)}>👤 {t('profile')}</Link>
         </li>
         {user && store.isAdmin(user.email) && (
-          <li className="nav-mobile-only">
+          <li>
             <Link to="/admin" onClick={() => setOpen(false)}>{t('admin')}</Link>
           </li>
         )}
